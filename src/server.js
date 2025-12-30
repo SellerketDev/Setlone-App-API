@@ -132,12 +132,19 @@ async function build() {
     fastify.log.error(error);
     
     const statusCode = error.statusCode || 500;
-    const message = error.message || 'Internal Server Error';
+    let message = error.message || 'Internal Server Error';
+
+    // Fastify validation errors contain more details
+    if (error.validation) {
+      message = `Validation error: ${error.validation.map(v => `${v.instancePath || v.params?.missingProperty || 'body'} ${v.message}`).join(', ')}`;
+      fastify.log.error('Validation error details:', error.validation);
+    }
 
     reply.code(statusCode).send({
       statusCode,
       error: error.name || 'Error',
-      message
+      message,
+      ...(error.validation && { validation: error.validation })
     });
   });
 

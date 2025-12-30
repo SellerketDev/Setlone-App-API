@@ -43,6 +43,10 @@ export const swaggerConfig = {
       {
         name: 'health',
         description: 'Health check endpoints'
+      },
+      {
+        name: 'trading',
+        description: 'AI Trading endpoints'
       }
     ],
     components: {
